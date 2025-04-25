@@ -9,7 +9,6 @@ import (
 	vclusterconfig "github.com/loft-sh/vcluster/config"
 	"github.com/loft-sh/vcluster/pkg/config"
 	"github.com/loft-sh/vcluster/pkg/controllers/resources/nodes"
-	"github.com/loft-sh/vcluster/pkg/etcd"
 	"github.com/loft-sh/vcluster/pkg/mappings"
 	"github.com/loft-sh/vcluster/pkg/mappings/store"
 	"github.com/loft-sh/vcluster/pkg/mappings/store/verify"
@@ -380,10 +379,10 @@ func initControllerContext(
 		return nil, err
 	}
 
-	etcdClient, err := etcd.NewFromConfig(ctx, vClusterOptions)
-	if err != nil {
-		return nil, fmt.Errorf("create etcd client: %w", err)
-	}
+	//etcdClient, err := etcd.NewFromConfig(ctx, vClusterOptions)
+	//if err != nil {
+	//	return nil, fmt.Errorf("create etcd client: %w", err)
+	//}
 
 	controllerContext := &synccontext.ControllerContext{
 		Context:      ctx,
@@ -403,7 +402,7 @@ func initControllerContext(
 		ctx,
 		virtualManager.GetClient(),
 		localManager.GetClient(),
-		store.NewEtcdBackend(etcdClient),
+		store.NewMemoryBackend(),
 		verify.NewVerifyMapping(controllerContext.ToRegisterContext().ToSyncContext("verify-mapping")),
 	)
 	if err != nil {
